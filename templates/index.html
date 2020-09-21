@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Task Master</title>
+{% endblock %}
+
+
+{% block body %}
+<div class="content">
+
+
+
+    <nav class="navbar navbar-dark bg-dark">
+  <span class="navbar-brand mb-0 h1">PFINDER: Pulsar candidate from the FFA algorithm classifier by J. Wongphechauxsorn@mpifr</span>
+  </nav>
+
+<ul class="nav nav-pills nav-fill">
+  <li class="nav-item">
+    <a class="nav-link active bg-light text-dark" href="https://www.atnf.csiro.au/research/pulsar/psrcat/">PSRCAT</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active bg-light text-dark" href="https://sites.google.com/site/htrusouthdeep/home">HTRU-S-Lowlat</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active bg-light text-dark" href="http://www.epta.eu.org/epndb/">EPN-pulse-profile</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled bg-light" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+  </li>
+</ul>
+<div class="row"> </div>
+
+<h4 class="p-3 mb-2 bg-primary text-white text-center ">Candidate viewer</h2>
+
+    <div class="row">
+    <div class="col-2">
+    <span class="badge badge-primary">SGAN: {{sgan_score}} </span>
+    <span class="badge badge-primary">PICS: {{pics_score}} </span>
+    </div>
+    <label class="col-1" >Current id: {{ id }} </label>
+    <label class='col-5'> Current file: {{ url }} </label>
+    </div>    
+    
+    </div>
+
+
+    <div class="row">
+        
+        <div class="col-md-6 my-auto">
+        <span class="border border-primary">
+        <img src={{url}} alt="Chart" height="auto" width="100%" class=" img-fluid center">
+        </span>
+        </div>
+
+        <div class="col-md-3 my-auto">
+        <img src={{url2}} alt="Chart" height="auto" width="110%" class="center">
+        </div>
+
+        <div class="col-md-3 my-auto">
+            <h1 style="text-align: center"> Nearby Pulsars </h1>
+<table class="table table-strip">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Jname</th>
+      <th scope="col">Period (s)</th>
+      <th scope="col">DM (pc cm^-3)</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>J1746-2829</td>
+      <td>1.88</td>
+      <td>1200</td>
+      <td><button type="button" class="btn btn-primary btn-sm">Detect</button> </td>
+    </tr>
+
+  </tbody>
+</table>
+
+    </table>
+        </div>
+    </div>        
+    <div class='col-md-12'>
+    <form method ="POST" action="/">
+        <div class="row">
+        <div class="label col-1" ></div>
+        <button type="submit" name="next" value="next" class="btn btn-primary"> Next </button>
+        <button type="submit" name="RFI" value="RFI" class="btn btn-primary"> RFI </button>
+        <button type="submit" name="Known" value="known" class="btn btn-primary"> Known </button>   
+        <button type="submit" name="HarmKnown" value="HarmKnown" class="btn btn-primary"> KnownHarmonic </button>
+        <button type="submit" name="ClassB" value="ClassB" class="btn btn-primary"> ClassB candidate </button>
+        <button type="submit" name="ClassA" value="ClassA" class="btn btn-primary"> ClassA candidate </button>
+        <button type="submit" name="back" value="back" class="btn btn-primary"> Back </button>
+        <div class="label col-1" ></div>
+        <input type="text" name="content" id="content">
+        <button type="submit" name="jump_to" value="jump_to" class="btn btn-primary col-1">Jump to</button>
+        <button type="submit" name="restart" value="restart" class="btn btn-danger col-1">Restart</button>
+        </div>
+     </form> 
+     </div>
+     <div class="row">:</div>
+    <div class="row">
+    <div class="label col-1" ></div>
+
+    </div>
+
+    <h4 class="p-3 mb-2 bg-primary text-white text-center">Table of candidates</h2>
+
+
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+<table class="table table-bordered">
+        <tr>
+            <th scope="col">Number</th>
+            <th scope="col">Name</th>
+            <th scope="col">Score</th>
+            <th scope="col">Date</th>
+            <th scope="col">Action</th>     
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.id }}</td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.score }}</td>
+
+                <td>
+                    <a href="/delete/{{task.id}}">Delete</a>
+                    <br>
+                    <a href="{{task.id}}">Jump</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+    
+    
