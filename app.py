@@ -62,7 +62,7 @@ def compare_rowtoid():
 def get_ffa_images():
     global FFA_list_file #Call global parameter FFA_list_file 
     global FFA_img_path #Call the path
-    FFA_list_file=sorted(glob.glob('/home/jompoj/flask_PFINDER'+FFA_img_path+'/*.png'))
+    FFA_list_file=sorted(glob.glob('/homes/jompoj/PFINDER'+FFA_img_path+'/*.png'))
     #rint(FFA_list_file)
 
 @app.route('/')
@@ -73,7 +73,7 @@ def plot():
     #Todo.query.delete()
     load_files_to_db()
     if len(FFA_list_file)==0:
-        return render_template('index.html', url=FFA_list_file[0], url2='/static/images/C1_2020.pfd.png', sgan_score='1', pics_score='1', tasks=['None','None','none'], id='none', name='Dummy')
+        return render_template('index.html', url='/static/images/welcome.png', url2='/static/images/C1_2020.pfd.png', sgan_score='1', pics_score='1', tasks=['Can not find images','None','none'], id='no images', name='Dummy')
     elif current_row<=len(Todo.query.all()):
         current_id=rowtoid(current_row)
         tasks = Todo.query.order_by(Todo.id).all()
@@ -120,6 +120,7 @@ def submit():
             #return str(id_to)
         elif request.form.get("restart"):
             Todo.query.delete()
+            db.session.commit()
             return redirect('/')
     update(score)
     return redirect('/')
