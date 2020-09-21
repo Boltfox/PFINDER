@@ -1,4 +1,4 @@
-# PFINDER
+<h1> PFINDER <\h1>
 This is a simple python+html code to view the candidate from the FFA riptide (https://github.com/v-morello/riptide)
 
 to setting up, 
