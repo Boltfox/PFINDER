@@ -5,13 +5,11 @@ from datetime import datetime
 import glob
 import os
 
-sd = os.path.dirname(os.path.abspath(__file__))
-pj = 'HTRUS'
 
 #import riptide
 #from candidate.py import Candidate
 global FFA_img_path
-FFA_img_path=sd+"/static/images/"+pj #path to images(.png) from the ffa 
+FFA_img_path='/static/images/HTRUS/' #path to images(.png) from the ffa 
 global FFA_list_file
 FFA_list_file=[]
 
@@ -38,8 +36,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///htrusll.db'
 db = SQLAlchemy(app)
 
-
-
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
@@ -49,17 +45,13 @@ class Todo(db.Model):
     def __repr__(self):
         return self.id
 
-#db.create_all()
+
 #global rowtoid
 
 
 def rowtoid(row):
-    row_ = compare_rowtoid()
-    if row < len(row_):  # Check if the index is within the range of the list
-        return row_[row]
-    else:
-        return None  # Return None or some other value to indicate that the index is out of range
-
+    row_=compare_rowtoid()
+    return row_[row]
 
 def compare_rowtoid():
     row_list=[]
@@ -70,9 +62,7 @@ def compare_rowtoid():
 def get_ffa_images():
     global FFA_list_file #Call global parameter FFA_list_file 
     global FFA_img_path #Call the path
-    FFA_list_file=sorted(glob.glob(FFA_img_path+'/*.png'))
-    print("We have"+str(len(FFA_list_file)))
-    print("/homes/jompoj/PFINDER"+FFA_img_path)
+    FFA_list_file=sorted(glob.glob('/homes/jompoj/PFINDER'+FFA_img_path+'/*.png'))
     #rint(FFA_list_file)
 
 @app.route('/')
@@ -80,35 +70,20 @@ def plot():
     global FFA_list_file
     global current_row
     global current_id
+    #Todo.query.delete()
     load_files_to_db()
-    # Check if all images have been labeled
-    if current_row >= len(FFA_list_file):
-        current_row = 0  # Reset to the first image
-        return render_template('index.html', message="You have labeled all the data. Starting over.")
-
-    
-
-    if len(FFA_list_file) == 0:
-        return render_template('index.html', url='/static/images/welcome.png', url2='/static/images/C1_2020.pfd.png', sgan_score='1', pics_score='1', tasks=['Can not find images', 'None', 'none'], id='no images', name='Dummy')
-    elif current_row < len(Todo.query.all()):
-        current_id = rowtoid(current_row)
+    if len(FFA_list_file)==0:
+        return render_template('index.html', url='/static/images/welcome.png', url2='/static/images/C1_2020.pfd.png', sgan_score='1', pics_score='1', tasks=['Can not find images','None','none'], id='no images', name='Dummy')
+    elif current_row<=len(Todo.query.all()):
+        current_id=rowtoid(current_row)
         tasks = Todo.query.order_by(Todo.id).all()
-        return render_template('index.html', url='/static/images/HTRUS/' + FFA_list_file[current_row].split('/')[-1], url2='/static/images/C1_2020.pfd.png', sgan_score='1', pics_score='1', tasks=tasks, id=current_id)
+        #return render_template('plot.html', url=FFA_list_file[0])
+        return render_template('index.html', url='/static/images/HTRUS/'+FFA_list_file[current_row].split('/')[-1] , url2='/static/images/C1_2020.pfd.png', sgan_score='1', pics_score='1', tasks=tasks, id=current_id)
 
 
 @app.route('/')
 def get_sgan_score():
     return 1
-
-def check_and_create_db():
-    db_path = os.path.join(os.getcwd(), 'htrusll.db')
-    print(f"Checking database at {db_path}")
-    if not os.path.exists(db_path):
-        print("Database file not found. Creating a new one.")
-        with app.app_context():  # Push an application context
-            db.create_all()
-        print("Database created.")
-
 
 #@app.route('/', methods=['POST', 'GET'])
 #def uploadfile(): 
@@ -208,8 +183,7 @@ def load_files_to_db():
                 print("Add the file to the database")
         #return redirect('/')
     except IndexError:
-        return "No file in this project folder ok?"
+        return "No file in this project folder"
 
 if __name__ == "__main__":
-    check_and_create_db()
     app.run(debug=True, port=1222)

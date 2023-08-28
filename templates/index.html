@@ -2,6 +2,17 @@
 
 {% block head %}
 <title>Task Master</title>
+<head>
+    <title>Your App</title>
+    <script type="text/javascript">
+        window.onload = function() {
+            {% if message %}
+                alert("{{ message }}");
+            {% endif %}
+        };
+    </script>
+</head>
+
 {% endblock %}
 
 
